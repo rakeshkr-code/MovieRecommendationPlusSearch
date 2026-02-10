@@ -50,3 +50,6 @@ Thumbs.db
 # Environment variables
 .env
 .env.local
+
+# Ignore any other files that should not be committed
+internal_workflow.md
