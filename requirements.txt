@@ -6,3 +6,5 @@ mlflow
 nltk
 # sqlite3
 streamlit
+python-dotenv
+requests
