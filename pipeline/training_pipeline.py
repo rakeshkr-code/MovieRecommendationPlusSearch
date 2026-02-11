@@ -2,10 +2,10 @@
 import pandas as pd
 import numpy as np
 from typing import Dict, Any
-from ..data_scripts import DatabaseManager
-from ..features import FeatureExtractor, FeatureEngineer
-from ..models import ContentBasedRecommender, MFRecommender, NCFRecommender
-from ..utils import Logger, MLFlowTracker
+from data_scripts import DatabaseManager
+from features import FeatureExtractor, FeatureEngineer
+from models import ContentBasedRecommender, MFRecommender, NCFRecommender
+from utils import Logger, MLFlowTracker
 
 class TrainingPipeline:
     """Training pipeline for recommender models"""

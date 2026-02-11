@@ -1,8 +1,10 @@
 # pipeline/etl_pipeline.py
 import pandas as pd
 from typing import Tuple
-from ..data_scripts import DataLoader, DataProcessor, DatabaseManager
-from ..utils import Logger
+# from ..data_scripts import DataLoader, DataProcessor, DatabaseManager
+from data_scripts import DataLoader, DataProcessor, DatabaseManager
+# from ..utils import Logger
+from utils import Logger
 
 class ETLPipeline:
     """ETL Pipeline for data processing"""

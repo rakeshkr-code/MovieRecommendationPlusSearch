@@ -52,6 +52,9 @@ class DataProcessor:
         """Main processing pipeline"""
         # Merge dataframes
         df = movies_df.merge(credits_df, left_on='id', right_on='movie_id', how='inner')
+
+        # print(f"Merged dataframe cols: {list(df.columns)}")
+        df = df.rename(columns={'title_x': 'title'})
         
         # Select relevant columns
         df = df[['id', 'title', 'genres', 'keywords', 'overview', 'cast', 'crew']]
