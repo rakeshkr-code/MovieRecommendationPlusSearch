@@ -21,10 +21,10 @@ class ETLPipeline:
     
     def extract(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """Extract data from CSV files"""
-        self.logger.info("Extracting data from CSV files...")
+        self.logger.info(f"Extracting data from CSV files: \n(1) {self.config.data.raw_movies_path}\n(2) {self.config.data.raw_credits_path}")
         movies_df, credits_df = self.data_loader.load_raw_data()
         self.data_loader.validate_data(movies_df, credits_df)
-        self.logger.info(f"Extracted {len(movies_df)} movies and {len(credits_df)} credits")
+        self.logger.info(f"E :: Extracted {len(movies_df)} movies and {len(credits_df)} credits ----------------------------")
         return movies_df, credits_df
     
     def transform(self, movies_df: pd.DataFrame, credits_df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
@@ -33,11 +33,11 @@ class ETLPipeline:
         
         # Create processed_movies table (for content-based recommendations)
         processed_df = self.data_processor.process_dataframe(movies_df, credits_df)
-        self.logger.info(f"Processed {len(processed_df)} movies for recommendations table")
+        self.logger.info(f"P :: Processed {len(processed_df)} movies for recommendations table")
         
         # Create movies_metadata table (for SQL queries)
         metadata_df = self.data_processor.process_metadata_dataframe(movies_df, credits_df)
-        self.logger.info(f"Processed {len(metadata_df)} movies for metadata table")
+        self.logger.info(f"P :: Processed {len(metadata_df)} movies for metadata table")
         
         return processed_df, metadata_df
     
@@ -56,7 +56,7 @@ class ETLPipeline:
             # Save metadata (for SQL queries)
             db.save_dataframe(metadata_df, 'movies_metadata')
         
-        self.logger.info("Data loaded successfully into database")
+        self.logger.info("L :: Data loaded successfully into database")
         self.logger.info(f"  - {self.config.data.processed_table}: {len(processed_df)} rows (for recommendations)")
         self.logger.info(f"  - movies_metadata: {len(metadata_df)} rows (for SQL queries)")
     
@@ -75,3 +75,9 @@ class ETLPipeline:
         
         self.logger.info("ETL pipeline completed successfully")
         return processed_df
+
+if __name__ == "__main__":
+    from config import Config
+    config = Config()
+    etl_pipeline = ETLPipeline(config)
+    etl_pipeline.run()
