@@ -13,7 +13,7 @@ class DataConfig:
     # db_path: str = "./data/movies.db"
     raw_movies_path: Path = PROJECT_ROOT / "data" / "raw" / "tmdb_5000_movies.csv"
     raw_credits_path: Path = PROJECT_ROOT / "data" / "raw" / "tmdb_5000_credits.csv"
-    db_path: Path = PROJECT_ROOT / "data" / "movies.db"
+    db_path: Path = PROJECT_ROOT / "data" / "moviesdb_etl_upd.db"
     processed_table: str = "processed_movies"
     raw_movies_table: str = "raw_movies"
     raw_credits_table: str = "raw_credits"

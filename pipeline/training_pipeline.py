@@ -20,10 +20,10 @@ class TrainingPipeline:
     
     def load_data(self) -> pd.DataFrame:
         """Load processed data from database"""
-        self.logger.info("Loading data from database...")
+        self.logger.info(f"Loading data from database : {self.config.data.db_path}")
         with self.db_manager as db:
             df = db.load_dataframe(self.config.data.processed_table)
-        self.logger.info(f"Loaded {len(df)} movies")
+        self.logger.info(f"Loaded {len(df)} movies from database")
         return df
     
     def train_content_based(self, df: pd.DataFrame) -> ContentBasedRecommender:
@@ -50,7 +50,7 @@ class TrainingPipeline:
             model.save_model(model_path)
             self.mlflow_tracker.log_artifact(model_path)
             
-            self.logger.info("Content-Based model trained successfully")
+            self.logger.info(f"Content-Based model trained successfully and saved to disk: {model_path}")
             return model
     
     def train_matrix_factorization(self, df: pd.DataFrame) -> MFRecommender:

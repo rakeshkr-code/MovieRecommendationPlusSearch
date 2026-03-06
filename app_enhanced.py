@@ -430,14 +430,46 @@ def tab_rag_search():
         
         if st.button("🔨 Build Vector Index", type="primary", key="build_vector_index"):
             with st.spinner("Creating embeddings and building index... This may take a few minutes."):
-                vector_store.create_index(movies_df, text_column='tags')
-                st.success("✅ Vector index created successfully!")
+                # vector_store.create_index(movies_df, text_column='tags')
+                vector_store.create_index(movies_df, text_column='description')
+                st.success("✅ Vector index created (with description column) successfully!")
                 st.rerun()
         return
     
     # Display stats
     stats = vector_store.get_collection_stats()
-    st.info(f"📊 Vector store ready with {stats['count']} movies indexed")
+    text_col_label = stats.get('text_column', 'unknown')
+    st.info(f"📊 Vector store ready: **{stats['count']}** movies indexed on column **`{text_col_label}`**")
+    
+    # ── Rebuild section ──────────────────────────────────────────────────────
+    with st.expander("⚙️ Rebuild Vector Index with a Different Column"):
+        st.markdown("Select a text column from the dataset to embed and rebuild the index.")
+        
+        # Offer only object (string) columns that are non-empty
+        candidate_cols = [
+            c for c in movies_df.columns
+            if movies_df[c].dtype == object and movies_df[c].notna().any()
+        ]
+        rebuild_col = st.selectbox(
+            "Text column to embed:",
+            options=candidate_cols,
+            index=candidate_cols.index(text_col_label) if text_col_label in candidate_cols else 0,
+            key="rebuild_col_select"
+        )
+        
+        st.warning(
+            f"⚠️ This will **DELETE** the current index (built on `{text_col_label}`) "
+            f"and rebuild it using `{rebuild_col}`. Takes ~2-3 minutes."
+        )
+        
+        if st.button("🔨 Rebuild Index", key="rebuild_vector_btn", type="primary"):
+            with st.spinner(f"Rebuilding vector index using column '{rebuild_col}'…"):
+                vector_store.create_index(movies_df, text_column=rebuild_col, force_recreate=True)
+            st.success(f"✅ Index rebuilt successfully using column: `{rebuild_col}`")
+            # Clear cached resource so the next load picks up the fresh index
+            get_vector_store.clear()
+            st.rerun()
+    # ─────────────────────────────────────────────────────────────────────────
     
     # Example queries
     st.markdown("**Example searches:**")

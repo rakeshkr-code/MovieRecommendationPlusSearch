@@ -24,7 +24,11 @@ class DataLoader:
     
     def validate_data(self, movies_df: pd.DataFrame, credits_df: pd.DataFrame) -> bool:
         """Validate loaded data"""
-        required_movie_cols = ['id', 'title', 'genres', 'keywords', 'overview']
+        # required_movie_cols = ['id', 'title', 'genres', 'keywords', 'overview']
+        # required_credit_cols = ['movie_id', 'cast', 'crew']
+        required_movie_cols = ['id', 'title', 'genres', 'tagline', 'keywords', 'overview',
+                               'original_language', 'homepage', 'status',
+                               'release_date', 'runtime', 'budget', 'revenue', 'popularity', 'vote_average', 'vote_count']
         required_credit_cols = ['movie_id', 'cast', 'crew']
         
         missing_movie = set(required_movie_cols) - set(movies_df.columns)
@@ -36,3 +40,10 @@ class DataLoader:
             raise ValueError(f"Missing columns in credits: {missing_credit}")
             
         return True
+
+if __name__ == "__main__":
+    # Example usage
+    loader = DataLoader('data/raw/tmdb_5000_movies.csv', 'data/raw/tmdb_5000_credits.csv')
+    movies_df, credits_df = loader.load_raw_data()
+    if loader.validate_data(movies_df, credits_df):
+        print("Data loaded and validated successfully!")

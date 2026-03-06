@@ -5,6 +5,7 @@
 *.sqlite3
 data/raw/*.csv
 data/*.db
+*chroma_db/
 
 # Model artifacts
 artifacts/*.pkl
