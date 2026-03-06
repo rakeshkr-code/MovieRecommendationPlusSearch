@@ -5,7 +5,7 @@ import sqlite3
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from langchain.agents import create_agent
 from langchain_core.tools import tool
-from llm_setup import get_llm
+from .llm_setup import get_llm
 import pandas as pd
 import os
 from dotenv import load_dotenv

@@ -70,10 +70,10 @@ class MovieVectorStore:
                 return
         
         # Create collection
-        self.logger.info(f"Creating new collection: {self.collection_name}")
+        self.logger.info(f"Creating new collection: {self.collection_name} (text_column='{text_column}')")
         self.collection = self.client.create_collection(
             name=self.collection_name,
-            metadata={"hnsw:space": "cosine"}  # Use cosine similarity
+            metadata={"hnsw:space": "cosine", "text_column": text_column}
         )
         
         # Prepare data
@@ -142,6 +142,7 @@ class MovieVectorStore:
             for i in range(len(results['ids'][0])):
                 result = {
                     'movie_id': results['metadatas'][0][i]['movie_id'],
+                    # 'movie_id': results['metadatas'][0][i]['id'],
                     'title': results['metadatas'][0][i]['title'],
                     'distance': results['distances'][0][i],
                     'similarity': 1 - results['distances'][0][i],  # Convert distance to similarity
@@ -156,10 +157,15 @@ class MovieVectorStore:
         if self.collection is None:
             return {'status': 'not_initialized', 'count': 0}
         
+        # Read text_column from persisted collection metadata (stored at index creation time)
+        collection_meta = self.collection.metadata or {}
+        text_column = collection_meta.get('text_column', 'unknown')
+        
         return {
             'status': 'ready',
             'count': self.collection.count(),
             'name': self.collection_name,
+            'text_column': text_column,
             'embedding_dim': self.embedder.get_dimension()
         }
     
