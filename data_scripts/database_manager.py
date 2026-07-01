@@ -5,7 +5,25 @@ from typing import Optional
 from pathlib import Path
 
 class DatabaseManager:
-    """Manages SQLite database operations"""
+    """
+    Manages SQLite database connections and DataFrame persistence.
+
+    Can be used directly or as a context manager to automatically
+    open and close the database connection.
+
+    Example:
+        # Using a context manager (recommended)
+        with DatabaseManager("data.db") as db:
+            db.save_dataframe(df, "sales")
+            sales = db.load_dataframe("sales")
+
+        # Without a context manager
+        db = DatabaseManager("data.db")
+        db.connect()
+        db.save_dataframe(df, "sales")
+        sales = db.load_dataframe("sales")
+        db.close()
+    """
     
     def __init__(self, db_path: str):
         self.db_path = Path(db_path)
